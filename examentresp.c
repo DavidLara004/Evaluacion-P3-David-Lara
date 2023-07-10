@@ -18,16 +18,16 @@ int compararEstudiantes(const void *est1, const void *est2) {
     Estudiante *e1 = (Estudiante *)est1;
     Estudiante *e2 = (Estudiante *)est2;
 
-    if (e1->codigo > e2->codigo) {
+    if (e1->codigo < e2->codigo) {
         return -1; // Indica que el primer estudiante es menor al segundo
-    } else if (e1->codigo < e2->codigo) {
+    } else if (e1->codigo > e2->codigo) {
         return 1; // Indica que el primer estudiante es mayor al segundo
     } else {
         return 0; // Indica que los estudiantes son iguales
     }
 }
 
-// Función para leer los datos de los estudiantes desde el archivo txt
+// Función para leer los datos de los estudiantes desde un archivo
 Estudiante *leerEstudiantesDesdeArchivo(const char *nombreArchivo, int *numEstudiantes) {
     FILE *archivo = fopen(nombreArchivo, "r");
     if (archivo == NULL) {
@@ -35,7 +35,9 @@ Estudiante *leerEstudiantesDesdeArchivo(const char *nombreArchivo, int *numEstud
         return NULL;
     }
 
-    fscanf(archivo, "%d", numEstudiantes);
+    char buffer[100];
+    fgets(buffer, sizeof(buffer), archivo);
+    sscanf(buffer, "%d", numEstudiantes);
 
     Estudiante *estudiantes = (Estudiante *)malloc(*numEstudiantes * sizeof(Estudiante));
     if (estudiantes == NULL) {
@@ -45,7 +47,8 @@ Estudiante *leerEstudiantesDesdeArchivo(const char *nombreArchivo, int *numEstud
     }
 
     for (int i = 0; i < *numEstudiantes; i++) {
-        fscanf(archivo, "%d;%[^;];%[^;];%f;%f;%f",
+        fgets(buffer, sizeof(buffer), archivo);
+        sscanf(buffer, "%d;%[^;];%[^;];%f;%f;%f",
                &estudiantes[i].codigo, estudiantes[i].nombre, estudiantes[i].carrera,
                &estudiantes[i].nota1, &estudiantes[i].nota2, &estudiantes[i].nota3);
     }
@@ -54,7 +57,7 @@ Estudiante *leerEstudiantesDesdeArchivo(const char *nombreArchivo, int *numEstud
     return estudiantes;
 }
 
-// Función para escribir los datos de los estudiantes en un archivo nuevo, en este caso el nuevo documento sera llamado alumnos_ordenados.txt
+// Función para escribir los datos de los estudiantes en un archivo
 void escribirEstudiantesEnArchivo(const char *nombreArchivo, Estudiante *estudiantes, int numEstudiantes) {
     FILE *archivo = fopen(nombreArchivo, "w");
     if (archivo == NULL) {

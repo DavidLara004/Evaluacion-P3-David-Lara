@@ -1,10 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-// Definición de estructura para representar a cada estudiante
+// Definición de estructura para representar un estudiante
 typedef struct {
     int codigo;
     char nombre[50];
+    char carrera[50];
+    float nota1;
+    float nota2;
+    float nota3;
     float promedio;
 } Estudiante;
 
@@ -14,7 +19,7 @@ int compararEstudiantes(const void *est1, const void *est2) {
     Estudiante *e2 = (Estudiante *)est2;
 
     if (e1->codigo > e2->codigo) {
-        return -1;
+        return -1; // Indica que el primer estudiante es menor al segundo
     } else if (e1->codigo < e2->codigo) {
         return 1; // Indica que el primer estudiante es mayor al segundo
     } else {
@@ -23,8 +28,8 @@ int compararEstudiantes(const void *est1, const void *est2) {
 }
 
 // Función para leer los datos de los estudiantes desde un archivo
-Estudiante *leerEstudiantesDesdeArchivo(const char *alumnos, int *numEstudiantes) {
-    FILE *archivo = fopen("alumnos.txt", "r+");
+Estudiante *leerEstudiantesDesdeArchivo(const char *nombreArchivo, int *numEstudiantes) {
+    FILE *archivo = fopen("alumnos.txt", "r");
     if (archivo == NULL) {
         printf("No se pudo abrir el archivo.\n");
         return NULL;
@@ -40,7 +45,9 @@ Estudiante *leerEstudiantesDesdeArchivo(const char *alumnos, int *numEstudiantes
     }
 
     for (int i = 0; i < *numEstudiantes; i++) {
-        fscanf(archivo, "%d %s %f", &estudiantes[i].codigo, estudiantes[i].nombre, &estudiantes[i].promedio);
+        fscanf(archivo, "%d;%[^;];%[^;];%f;%f;%f",
+               &estudiantes[i].codigo, estudiantes[i].nombre, estudiantes[i].carrera,
+               &estudiantes[i].nota1, &estudiantes[i].nota2, &estudiantes[i].nota3);
     }
 
     fclose(archivo);
@@ -48,7 +55,7 @@ Estudiante *leerEstudiantesDesdeArchivo(const char *alumnos, int *numEstudiantes
 }
 
 // Función para escribir los datos de los estudiantes en un archivo
-void escribirEstudiantesEnArchivo(const char *alumnos, Estudiante *estudiantes, int numEstudiantes) {
+void escribirEstudiantesEnArchivo(const char *nombreArchivo, Estudiante *estudiantes, int numEstudiantes) {
     FILE *archivo = fopen("alumnos.txt", "w");
     if (archivo == NULL) {
         printf("No se pudo abrir el archivo.\n");
@@ -58,15 +65,17 @@ void escribirEstudiantesEnArchivo(const char *alumnos, Estudiante *estudiantes, 
     fprintf(archivo, "%d\n", numEstudiantes);
 
     for (int i = 0; i < numEstudiantes; i++) {
-        fprintf(archivo, "%d %s %.2f\n", estudiantes[i].codigo, estudiantes[i].nombre, estudiantes[i].promedio);
+        fprintf(archivo, "%d;%s;%s;%.2f;%.2f;%.2f;%.2f\n",
+                estudiantes[i].codigo, estudiantes[i].nombre, estudiantes[i].carrera,
+                estudiantes[i].nota1, estudiantes[i].nota2, estudiantes[i].nota3, estudiantes[i].promedio);
     }
 
     fclose(archivo);
 }
 
 int main() {
-    int numEstudiantes=5;
-    Estudiante *estudiantes = leerEstudiantesDesdeArchivo("alumnos.txt", &numEstudiantes);
+    int numEstudiantes;
+    Estudiante *estudiantes = leerEstudiantesDesdeArchivo("estudiantes.txt", &numEstudiantes);
     if (estudiantes == NULL) {
         return 1;
     }
@@ -75,15 +84,8 @@ int main() {
     qsort(estudiantes, numEstudiantes, sizeof(Estudiante), compararEstudiantes);
 
     // Calcular la nota promedio
-    float sumaPromedios = 0.0;
     for (int i = 0; i < numEstudiantes; i++) {
-        sumaPromedios += estudiantes[i].promedio;
-    }
-    float promedio = sumaPromedios / numEstudiantes;
-
-    // Actualizar el promedio en cada estudiante
-    for (int i = 0; i < numEstudiantes; i++) {
-        estudiantes[i].promedio = promedio;
+        estudiantes[i].promedio = (estudiantes[i].nota1 + estudiantes[i].nota2 + estudiantes[i].nota3) / 3.0;
     }
 
     escribirEstudiantesEnArchivo("estudiantes_ordenados.txt", estudiantes, numEstudiantes);
@@ -92,3 +94,4 @@ int main() {
 
     return 0;
 }
+

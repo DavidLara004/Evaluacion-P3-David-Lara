@@ -7,13 +7,13 @@ char caracter[6];
 struct archivo{
 int nombre[50];
 float promedio;
-};
+}est;
 FILE *archivo;
 archivo=fopen("alumnos.txt", "r+");
 while (!feof(archivo))
     {
-        caracter[6] = fgetc(archivo);
-        putchar(caracter);
+        fread(&est, sizeof(est), 2, archivo);
+
         printf("%c", caracter);
     }
 

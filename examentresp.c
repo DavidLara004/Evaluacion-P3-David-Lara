@@ -27,7 +27,7 @@ int compararEstudiantes(const void *est1, const void *est2) {
     }
 }
 
-// Función para leer los datos de los estudiantes desde un archivo
+// Función para leer los datos de los estudiantes desde el archivo txt
 Estudiante *leerEstudiantesDesdeArchivo(const char *nombreArchivo, int *numEstudiantes) {
     FILE *archivo = fopen(nombreArchivo, "r");
     if (archivo == NULL) {
@@ -54,7 +54,7 @@ Estudiante *leerEstudiantesDesdeArchivo(const char *nombreArchivo, int *numEstud
     return estudiantes;
 }
 
-// Función para escribir los datos de los estudiantes en un archivo
+// Función para escribir los datos de los estudiantes en un archivo nuevo, en este caso el nuevo documento sera llamado alumnos_ordenados.txt
 void escribirEstudiantesEnArchivo(const char *nombreArchivo, Estudiante *estudiantes, int numEstudiantes) {
     FILE *archivo = fopen(nombreArchivo, "w");
     if (archivo == NULL) {

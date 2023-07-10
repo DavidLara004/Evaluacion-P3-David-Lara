@@ -29,7 +29,7 @@ int compararEstudiantes(const void *est1, const void *est2) {
 
 // Función para leer los datos de los estudiantes desde un archivo
 Estudiante *leerEstudiantesDesdeArchivo(const char *nombreArchivo, int *numEstudiantes) {
-    FILE *archivo = fopen("alumnos.txt", "r");
+    FILE *archivo = fopen(nombreArchivo, "r");
     if (archivo == NULL) {
         printf("No se pudo abrir el archivo.\n");
         return NULL;
@@ -56,7 +56,7 @@ Estudiante *leerEstudiantesDesdeArchivo(const char *nombreArchivo, int *numEstud
 
 // Función para escribir los datos de los estudiantes en un archivo
 void escribirEstudiantesEnArchivo(const char *nombreArchivo, Estudiante *estudiantes, int numEstudiantes) {
-    FILE *archivo = fopen("alumnos.txt", "w");
+    FILE *archivo = fopen(nombreArchivo, "w");
     if (archivo == NULL) {
         printf("No se pudo abrir el archivo.\n");
         return;
@@ -75,7 +75,7 @@ void escribirEstudiantesEnArchivo(const char *nombreArchivo, Estudiante *estudia
 
 int main() {
     int numEstudiantes;
-    Estudiante *estudiantes = leerEstudiantesDesdeArchivo("estudiantes.txt", &numEstudiantes);
+    Estudiante *estudiantes = leerEstudiantesDesdeArchivo("alumnos.txt", &numEstudiantes);
     if (estudiantes == NULL) {
         return 1;
     }
@@ -88,10 +88,9 @@ int main() {
         estudiantes[i].promedio = (estudiantes[i].nota1 + estudiantes[i].nota2 + estudiantes[i].nota3) / 3.0;
     }
 
-    escribirEstudiantesEnArchivo("estudiantes_ordenados.txt", estudiantes, numEstudiantes);
+    escribirEstudiantesEnArchivo("alumnos_ordenados.txt", estudiantes, numEstudiantes);
 
     free(estudiantes);
 
     return 0;
 }
-
